@@ -1,0 +1,251 @@
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <random>
+#include <iomanip>
+
+using namespace std;
+using namespace chrono;
+
+// --------------------------------------------------
+// COMMON HEAPIFY FUNCTION
+// maxMode = true  -> Max Heap
+// maxMode = false -> Min Heap
+// --------------------------------------------------
+
+void heapify(vector<int>& a, int size, int position, bool maxMode)
+{
+    while (true)
+    {
+        int selected = position;
+        int left = 2 * position + 1;
+        int right = 2 * position + 2;
+
+        if (maxMode)
+        {
+            if (left < size && a[left] > a[selected])
+                selected = left;
+
+            if (right < size && a[right] > a[selected])
+                selected = right;
+        }
+        else
+        {
+            if (left < size && a[left] < a[selected])
+                selected = left;
+
+            if (right < size && a[right] < a[selected])
+                selected = right;
+        }
+
+        if (selected == position)
+            break;
+
+        swap(a[position], a[selected]);
+        position = selected;
+    }
+}
+
+
+// --------------------------------------------------
+// BUILD HEAP
+// --------------------------------------------------
+
+void makeHeap(vector<int>& a, bool maxMode)
+{
+    int size = static_cast<int>(a.size());
+
+    for (int i = size / 2 - 1; i >= 0; i--)
+    {
+        heapify(a, size, i, maxMode);
+    }
+}
+
+
+// --------------------------------------------------
+// HEAP SORT
+// --------------------------------------------------
+
+void heapSort(vector<int>& a, bool maxMode)
+{
+    int size = static_cast<int>(a.size());
+
+    makeHeap(a, maxMode);
+
+    for (int end = size - 1; end >= 1; end--)
+    {
+        swap(a[0], a[end]);
+        heapify(a, end, 0, maxMode);
+    }
+
+    // Min Heap produces descending order,
+    // so manually convert it to ascending order.
+    if (!maxMode)
+    {
+        int start = 0;
+        int finish = size - 1;
+
+        while (start < finish)
+        {
+            swap(a[start], a[finish]);
+            start++;
+            finish--;
+        }
+    }
+}
+
+
+// --------------------------------------------------
+// CHECK WHETHER ARRAY IS SORTED
+// --------------------------------------------------
+
+bool checkSorted(const vector<int>& a)
+{
+    for (int i = 1; i < static_cast<int>(a.size()); i++)
+    {
+        if (a[i - 1] > a[i])
+            return false;
+    }
+
+    return true;
+}
+
+
+// --------------------------------------------------
+// DISPLAY FIRST FEW VALUES
+// --------------------------------------------------
+
+void displaySample(const vector<int>& a)
+{
+    int limit = min(10, static_cast<int>(a.size()));
+
+    for (int i = 0; i < limit; i++)
+    {
+        cout << a[i] << " ";
+    }
+
+    if (a.size() > 10)
+        cout << "...";
+
+    cout << endl;
+}
+
+
+// --------------------------------------------------
+// MAIN
+// --------------------------------------------------
+
+int main()
+{
+    int n;
+
+    cout << "Enter the number of elements: ";
+    cin >> n;
+
+    if (n <= 0)
+    {
+        cout << "Please enter a positive number." << endl;
+        return 0;
+    }
+
+    // Create random input
+    vector<int> original(n);
+
+    random_device seed;
+    mt19937 engine(seed());
+    uniform_int_distribution<int> randomNumber(100, 99999);
+
+    for (int i = 0; i < n; i++)
+    {
+        original[i] = randomNumber(engine);
+    }
+
+    // Make two copies
+    vector<int> maxVersion = original;
+    vector<int> minVersion = original;
+
+
+    // ==================================================
+    // MAX HEAP SORT
+    // ==================================================
+
+    auto maxBegin = steady_clock::now();
+
+    heapSort(maxVersion, true);
+
+    auto maxEnd = steady_clock::now();
+
+    auto maxDuration = maxEnd - maxBegin;
+
+
+    // ==================================================
+    // MIN HEAP SORT
+    // ==================================================
+
+    auto minBegin = steady_clock::now();
+
+    heapSort(minVersion, false);
+
+    auto minEnd = steady_clock::now();
+
+    auto minDuration = minEnd - minBegin;
+
+
+    // ==================================================
+    // RESULTS
+    // ==================================================
+
+    cout << "\n\n========================================";
+    cout << "\n           HEAP SORT RESULTS";
+    cout << "\n========================================";
+
+
+    cout << "\n\nMAX HEAP SORT";
+    cout << "\n----------------------------------------";
+
+    cout << "\nTime in Nanoseconds : "
+         << duration_cast<nanoseconds>(maxDuration).count();
+
+    cout << "\nTime in Microseconds: "
+         << duration_cast<microseconds>(maxDuration).count();
+
+    cout << "\nTime in Milliseconds: "
+         << duration_cast<milliseconds>(maxDuration).count();
+
+    cout << "\nTime in Seconds     : "
+         << fixed << setprecision(9)
+         << duration<double>(maxDuration).count();
+
+    cout << "\nSorted correctly    : "
+         << (checkSorted(maxVersion) ? "YES" : "NO");
+
+    cout << "\nFirst values        : ";
+    displaySample(maxVersion);
+
+
+    cout << "\n\nMIN HEAP SORT";
+    cout << "\n----------------------------------------";
+
+    cout << "\nTime in Nanoseconds : "
+         << duration_cast<nanoseconds>(minDuration).count();
+
+    cout << "\nTime in Microseconds: "
+         << duration_cast<microseconds>(minDuration).count();
+
+    cout << "\nTime in Milliseconds: "
+         << duration_cast<milliseconds>(minDuration).count();
+
+    cout << "\nTime in Seconds     : "
+         << fixed << setprecision(9)
+         << duration<double>(minDuration).count();
+
+    cout << "\nSorted correctly    : "
+         << (checkSorted(minVersion) ? "YES" : "NO");
+
+    cout << "\nFirst values        : ";
+    displaySample(minVersion);
+
+    cout << "\n\n========================================\n";
+
+    return 0;
+}
