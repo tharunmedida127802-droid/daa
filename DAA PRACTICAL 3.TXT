@@ -7,6 +7,7 @@
 using namespace std;
 using namespace chrono;
 
+
 // --------------------------------------------------
 // COMMON HEAPIFY FUNCTION
 // maxMode = true  -> Max Heap
@@ -78,8 +79,8 @@ void heapSort(vector<int>& a, bool maxMode)
         heapify(a, end, 0, maxMode);
     }
 
-    // Min Heap produces descending order,
-    // so manually convert it to ascending order.
+    // Min Heap gives descending order,
+    // so reverse it to get ascending order.
     if (!maxMode)
     {
         int start = 0;
@@ -96,7 +97,7 @@ void heapSort(vector<int>& a, bool maxMode)
 
 
 // --------------------------------------------------
-// CHECK WHETHER ARRAY IS SORTED
+// CHECK SORTING
 // --------------------------------------------------
 
 bool checkSorted(const vector<int>& a)
@@ -112,7 +113,7 @@ bool checkSorted(const vector<int>& a)
 
 
 // --------------------------------------------------
-// DISPLAY FIRST FEW VALUES
+// DISPLAY FIRST FEW ELEMENTS
 // --------------------------------------------------
 
 void displaySample(const vector<int>& a)
@@ -132,7 +133,7 @@ void displaySample(const vector<int>& a)
 
 
 // --------------------------------------------------
-// MAIN
+// MAIN FUNCTION
 // --------------------------------------------------
 
 int main()
@@ -148,7 +149,7 @@ int main()
         return 0;
     }
 
-    // Create random input
+    // Generate random elements
     vector<int> original(n);
 
     random_device seed;
@@ -160,7 +161,7 @@ int main()
         original[i] = randomNumber(engine);
     }
 
-    // Make two copies
+    // Create two copies of the same data
     vector<int> maxVersion = original;
     vector<int> minVersion = original;
 
@@ -192,10 +193,10 @@ int main()
 
 
     // ==================================================
-    // RESULTS
+    // DISPLAY RESULTS
     // ==================================================
 
-    cout << "\n\n========================================";
+    cout << "\n========================================";
     cout << "\n           HEAP SORT RESULTS";
     cout << "\n========================================";
 
@@ -203,49 +204,151 @@ int main()
     cout << "\n\nMAX HEAP SORT";
     cout << "\n----------------------------------------";
 
-    cout << "\nTime in Nanoseconds : "
-         << duration_cast<nanoseconds>(maxDuration).count();
+    cout << "\nNanoseconds  : "
+         << duration_cast<nanoseconds>(maxDuration).count()
+         << " ns";
 
-    cout << "\nTime in Microseconds: "
-         << duration_cast<microseconds>(maxDuration).count();
+    cout << "\nMicroseconds : "
+         << duration_cast<microseconds>(maxDuration).count()
+         << " us";
 
-    cout << "\nTime in Milliseconds: "
-         << duration_cast<milliseconds>(maxDuration).count();
+    cout << "\nMilliseconds : "
+         << duration_cast<milliseconds>(maxDuration).count()
+         << " ms";
 
-    cout << "\nTime in Seconds     : "
+    cout << "\nSeconds      : "
          << fixed << setprecision(9)
-         << duration<double>(maxDuration).count();
+         << duration<double>(maxDuration).count()
+         << " sec";
 
-    cout << "\nSorted correctly    : "
+    cout << "\nSorted correctly : "
          << (checkSorted(maxVersion) ? "YES" : "NO");
 
-    cout << "\nFirst values        : ";
+    cout << "\nFirst values : ";
     displaySample(maxVersion);
 
 
     cout << "\n\nMIN HEAP SORT";
     cout << "\n----------------------------------------";
 
-    cout << "\nTime in Nanoseconds : "
-         << duration_cast<nanoseconds>(minDuration).count();
+    cout << "\nNanoseconds  : "
+         << duration_cast<nanoseconds>(minDuration).count()
+         << " ns";
 
-    cout << "\nTime in Microseconds: "
-         << duration_cast<microseconds>(minDuration).count();
+    cout << "\nMicroseconds : "
+         << duration_cast<microseconds>(minDuration).count()
+         << " us";
 
-    cout << "\nTime in Milliseconds: "
-         << duration_cast<milliseconds>(minDuration).count();
+    cout << "\nMilliseconds : "
+         << duration_cast<milliseconds>(minDuration).count()
+         << " ms";
 
-    cout << "\nTime in Seconds     : "
+    cout << "\nSeconds      : "
          << fixed << setprecision(9)
-         << duration<double>(minDuration).count();
+         << duration<double>(minDuration).count()
+         << " sec";
 
-    cout << "\nSorted correctly    : "
+    cout << "\nSorted correctly : "
          << (checkSorted(minVersion) ? "YES" : "NO");
 
-    cout << "\nFirst values        : ";
+    cout << "\nFirst values : ";
     displaySample(minVersion);
 
     cout << "\n\n========================================\n";
 
     return 0;
 }
+
+
+/*
+=========================================================
+                     ALGORITHM
+               MAX HEAP AND MIN HEAP SORT
+=========================================================
+
+1. Start.
+
+2. Read the number of elements N from the user.
+
+3. Create an array of N elements.
+
+4. Generate random values and store them in the array.
+
+5. Create two copies of the original array:
+      - One for Max Heap Sort.
+      - One for Min Heap Sort.
+
+---------------------------------------------------------
+             MAX HEAP SORT ALGORITHM
+---------------------------------------------------------
+
+6. Build a Max Heap from the first array.
+
+7. Start from the last element of the heap.
+
+8. Swap the root element with the last element.
+
+9. Reduce the heap size by one.
+
+10. Apply Max Heapify to restore the Max Heap property.
+
+11. Repeat steps 8 to 10 until only one element remains.
+
+12. The array is now sorted in ascending order.
+
+---------------------------------------------------------
+             MIN HEAP SORT ALGORITHM
+---------------------------------------------------------
+
+13. Build a Min Heap from the second array.
+
+14. Start from the last element of the heap.
+
+15. Swap the root element with the last element.
+
+16. Reduce the heap size by one.
+
+17. Apply Min Heapify to restore the Min Heap property.
+
+18. Repeat steps 15 to 17 until only one element remains.
+
+19. The result is in descending order.
+
+20. Reverse the array using element swapping to obtain
+    ascending order.
+
+---------------------------------------------------------
+                 TIME COMPARISON
+---------------------------------------------------------
+
+21. Record the starting time before Max Heap Sort.
+
+22. Record the ending time after Max Heap Sort.
+
+23. Calculate the execution time.
+
+24. Repeat the same process for Min Heap Sort.
+
+25. Display execution time in:
+      - Nanoseconds
+      - Microseconds
+      - Milliseconds
+      - Seconds
+
+26. Check whether both arrays are correctly sorted.
+
+27. Display the results.
+
+28. Stop.
+
+
+Time Complexity:
+    Best Case    : O(N log N)
+    Average Case : O(N log N)
+    Worst Case   : O(N log N)
+
+Space Complexity:
+    O(1) auxiliary space for Heap Sort.
+
+=========================================================
+*/
