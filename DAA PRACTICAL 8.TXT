@@ -6,21 +6,32 @@
 
 using namespace std;
 
+// Practical 8: Graph Traversal using DFS and BFS
+// Purpose: To implement Depth First Search and Breadth First Search.
+
 class GraphTraversal
 {
 private:
+    // Store the number of vertices
     int vertices;
+
+    // Store the graph using an adjacency matrix
     vector<vector<int>> matrix;
 
 public:
+    // Constructor to create the graph
     GraphTraversal(int n)
     {
         vertices = n;
+
+        // Initialize adjacency matrix with 0
         matrix.resize(n, vector<int>(n, 0));
     }
 
+    // Function to connect two vertices
     void connect(int a, int b)
     {
+        // Check whether the vertices are valid
         if (a < 0 || a >= vertices || b < 0 || b >= vertices)
         {
             cout << "Invalid edge! Vertex must be between 0 and "
@@ -28,14 +39,17 @@ public:
             return;
         }
 
+        // Create an undirected edge between the vertices
         matrix[a][b] = 1;
         matrix[b][a] = 1;
     }
 
+    // Function to display the adjacency matrix
     void showGraph()
     {
         cout << "\nAdjacency Matrix:\n";
 
+        // Display each element of the matrix
         for (int i = 0; i < vertices; i++)
         {
             for (int j = 0; j < vertices; j++)
@@ -46,33 +60,46 @@ public:
         }
     }
 
+    // Function to perform Depth First Search
     void depthFirst(int start)
     {
+        // Check whether the starting vertex is valid
         if (start < 0 || start >= vertices)
         {
             cout << "Invalid starting vertex!";
             return;
         }
 
+        // Create visited array
         vector<bool> visited(vertices, false);
+
+        // Create a stack for DFS
         stack<int> s;
 
+        // Push the starting vertex into the stack
         s.push(start);
 
+        // Continue until the stack becomes empty
         while (!s.empty())
         {
+            // Take the top vertex from the stack
             int current = s.top();
             s.pop();
 
+            // Skip the vertex if it is already visited
             if (visited[current])
                 continue;
 
+            // Mark the vertex as visited
             visited[current] = true;
 
+            // Display the current vertex
             cout << current << " ";
 
+            // Check connected vertices
             for (int i = vertices - 1; i >= 0; i--)
             {
+                // Push unvisited connected vertices into the stack
                 if (matrix[current][i] == 1 && !visited[i])
                 {
                     s.push(i);
@@ -81,29 +108,42 @@ public:
         }
     }
 
+    // Function to perform Breadth First Search
     void breadthFirst(int start)
     {
+        // Check whether the starting vertex is valid
         if (start < 0 || start >= vertices)
         {
             cout << "Invalid starting vertex!";
             return;
         }
 
+        // Create visited array
         vector<bool> visited(vertices, false);
+
+        // Create a queue for BFS
         queue<int> q;
 
+        // Mark starting vertex as visited
         visited[start] = true;
+
+        // Add starting vertex to the queue
         q.push(start);
 
+        // Continue until the queue becomes empty
         while (!q.empty())
         {
+            // Take the first vertex from the queue
             int current = q.front();
             q.pop();
 
+            // Display the current vertex
             cout << current << " ";
 
+            // Check all connected vertices
             for (int i = 0; i < vertices; i++)
             {
+                // Add unvisited connected vertices to the queue
                 if (matrix[current][i] == 1 && !visited[i])
                 {
                     visited[i] = true;
@@ -116,22 +156,28 @@ public:
 
 int main()
 {
+    // Declare variables for vertices and edges
     int n, edges;
 
+    // Input the number of vertices
     cout << "Enter number of vertices: ";
     cin >> n;
 
+    // Check whether the number of vertices is valid
     if (n <= 0)
     {
         cout << "Number of vertices must be greater than 0.";
         return 0;
     }
 
+    // Create a graph object
     GraphTraversal graph(n);
 
+    // Input the number of edges
     cout << "Enter number of edges: ";
     cin >> edges;
 
+    // Input the edges
     cout << "Enter edges (u v):\n";
 
     for (int i = 0; i < edges; i++)
@@ -139,83 +185,73 @@ int main()
         int u, v;
         cin >> u >> v;
 
+        // Connect the two vertices
         graph.connect(u, v);
     }
 
+    // Declare the starting vertex
     int start;
 
+    // Input the starting vertex
     cout << "Enter starting vertex: ";
     cin >> start;
 
+    // Check whether the starting vertex is valid
     if (start < 0 || start >= n)
     {
         cout << "Invalid starting vertex!";
         return 0;
     }
 
+    // Display the adjacency matrix
     graph.showGraph();
 
+    // Perform DFS traversal
     cout << "\nDFS Traversal: ";
 
+    // Start measuring DFS execution time
     auto dfsStart = chrono::high_resolution_clock::now();
 
     graph.depthFirst(start);
 
+    // Stop measuring DFS execution time
     auto dfsEnd = chrono::high_resolution_clock::now();
 
+    // Calculate DFS execution time in nanoseconds
     auto dfsTime =
         chrono::duration_cast<chrono::nanoseconds>
         (dfsEnd - dfsStart);
 
+    // Display DFS execution time
     cout << "\nDFS Time: " << dfsTime.count() << " ns";
 
 
+    // Perform BFS traversal
     cout << "\n\nBFS Traversal: ";
 
+    // Start measuring BFS execution time
     auto bfsStart = chrono::high_resolution_clock::now();
 
     graph.breadthFirst(start);
 
+    // Stop measuring BFS execution time
     auto bfsEnd = chrono::high_resolution_clock::now();
 
+    // Calculate BFS execution time in nanoseconds
     auto bfsTime =
         chrono::duration_cast<chrono::nanoseconds>
         (bfsEnd - bfsStart);
 
+    // Display BFS execution time
     cout << "\nBFS Time: " << bfsTime.count() << " ns";
 
     return 0;
 }
 
-/*
-====================================================
-                DFS ALGORITHM
-====================================================
-
-1. Start from the given vertex.
-2. Create a visited list.
-3. Mark all vertices as not visited.
-4. Put the starting vertex into a stack.
-5. Take the top vertex from the stack.
-6. Mark it as visited and print it.
-7. Add its unvisited connected vertices to the stack.
-8. Repeat until the stack becomes empty.
-9. Stop.
-
-
-====================================================
-                BFS ALGORITHM
-====================================================
-
-1. Start from the given vertex.
-2. Create a visited list.
-3. Mark all vertices as not visited.
-4. Put the starting vertex into a queue.
-5. Mark the starting vertex as visited.
-6. Take the first vertex from the queue.
-7. Print the vertex.
-8. Add its unvisited connected vertices to the queue.
-9. Repeat until the queue becomes empty.
-10. Stop.
-====================================================
-*/
+// DFS uses a stack and explores a path as deeply as possible.
+// BFS uses a queue and explores vertices level by level.
+// DFS stands for Depth First Search.
+// BFS stands for Breadth First Search.
+// Both methods are used to traverse or search a graph.
+// Time Complexity: O(V^2) for the adjacency matrix representation.
+// Space Complexity: O(V^2) for the adjacency matrix.
