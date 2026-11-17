@@ -4,22 +4,29 @@ using namespace std;
 
 int main()
 {
+    // Declare variable to store the number of vertices
     int n;
 
+    // Ask the user to enter the number of vertices
     cout << "Enter number of vertices: ";
     cin >> n;
 
+    // Declare an adjacency matrix to store graph values
     int graph[10][10];
 
+    // Ask the user to enter the adjacency matrix
     cout << "Enter the adjacency matrix:\n";
     cout << "Enter 0 for no edge (except diagonal):\n";
 
+    // Read the adjacency matrix from the user
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
+            // Input the distance between vertex i and vertex j
             cin >> graph[i][j];
 
+            // Convert 0 to infinity when there is no edge
             if (i != j && graph[i][j] == 0)
             {
                 graph[i][j] = INT_MAX;
@@ -28,16 +35,22 @@ int main()
     }
 
     // Floyd-Warshall Algorithm
+    // Find the shortest path between every pair of vertices
     for (int k = 0; k < n; k++)
     {
+        // Select the source vertex
         for (int i = 0; i < n; i++)
         {
+            // Select the destination vertex
             for (int j = 0; j < n; j++)
             {
+                // Check whether a path exists through vertex k
+                // and whether it gives a shorter distance
                 if (graph[i][k] != INT_MAX &&
                     graph[k][j] != INT_MAX &&
                     graph[i][k] + graph[k][j] < graph[i][j])
                 {
+                    // Update the shortest distance
                     graph[i][j] = graph[i][k] + graph[k][j];
                 }
             }
@@ -47,17 +60,38 @@ int main()
     // Display shortest distance matrix
     cout << "\nShortest Distance Matrix:\n";
 
+    // Print the final shortest distance matrix
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
+            // Display INF if there is no path
             if (graph[i][j] == INT_MAX)
                 cout << "INF\t";
             else
+                // Display the shortest distance
                 cout << graph[i][j] << "\t";
         }
         cout << endl;
     }
 
+    // End the program
     return 0;
 }
+
+
+    // Key Point:
+    // Floyd-Warshall algorithm finds the shortest paths
+    // between all pairs of vertices in a weighted graph.
+
+    // Time Complexity: O(n^3)
+    // Space Complexity: O(n^2)
+
+    // Important Viva Point:
+    // The algorithm uses each vertex as an intermediate vertex
+    // and continuously updates the shortest distance.
+
+
+    // Practical 11: Floyd-Warshall Algorithm
+    // Purpose: To find the shortest distance between every pair of vertices.
+
