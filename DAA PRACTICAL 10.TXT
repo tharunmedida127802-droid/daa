@@ -1,47 +1,64 @@
+// Practical 10: Kruskal's Algorithm
+// Purpose: To find the Minimum Spanning Tree (MST) of a graph.
+
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
+// Structure to store information about an edge
 struct Edge
 {
     int u, v, weight;
 };
 
+// Compare two edges based on their weight
 bool compare(Edge a, Edge b)
 {
     return a.weight < b.weight;
 }
 
+// Array to store the parent of each vertex
 int parent[10];
 
+// Find the root parent of a vertex
 int find(int x)
 {
+    // If the vertex is its own parent, it is the root
     if (parent[x] == x)
         return x;
 
+    // Recursively find the root parent
     return find(parent[x]);
 }
 
+// Join two different sets
 void unionSet(int u, int v)
 {
+    // Find the root of both vertices
     int rootU = find(u);
     int rootV = find(v);
 
+    // Make rootU the parent of rootV
     parent[rootV] = rootU;
 }
 
 int main()
 {
+    // Declare variables for vertices and edges
     int n, e;
 
+    // Ask the user to enter the number of vertices
     cout << "Enter number of vertices: ";
     cin >> n;
 
+    // Ask the user to enter the number of edges
     cout << "Enter number of edges: ";
     cin >> e;
 
+    // Array to store all edges of the graph
     Edge edges[20];
 
+    // Input the edges and their weights
     cout << "Enter edges (u v weight):\n";
 
     for (int i = 0; i < e; i++)
@@ -51,21 +68,26 @@ int main()
             >> edges[i].weight;
     }
 
-    // Initialize parent
+    // Initialize each vertex as its own parent
     for (int i = 0; i < n; i++)
     {
         parent[i] = i;
     }
 
-    // Sort edges by weight
+    // Sort all edges in increasing order of weight
     sort(edges, edges + e, compare);
 
+    // Variable to store the total cost of MST
     int totalCost = 0;
+
+    // Count the number of edges selected for MST
     int count = 0;
 
+    // Display the Minimum Spanning Tree
     cout << "\nMinimum Spanning Tree:\n";
     cout << "Edge\tWeight\n";
 
+    // Select edges until MST contains n-1 edges
     for (int i = 0; i < e && count < n - 1; i++)
     {
         int u = edges[i].u;
@@ -74,18 +96,30 @@ int main()
         // Check whether adding this edge creates a cycle
         if (find(u) != find(v))
         {
+            // Add the edge to the Minimum Spanning Tree
             cout << u << " - " << v
                  << "\t" << edges[i].weight << endl;
 
+            // Add the edge weight to the total cost
             totalCost += edges[i].weight;
 
+            // Join the two sets
             unionSet(u, v);
 
+            // Increase the count of selected edges
             count++;
         }
     }
 
+    // Display the minimum total cost of the MST
     cout << "\nMinimum Cost = " << totalCost << endl;
+
+    // Key Point:
+    // Kruskal's algorithm selects edges in increasing order of weight.
+    // An edge is selected only if it does not create a cycle.
+
+    // Time Complexity: O(E log E)
+    // Space Complexity: O(V + E)
 
     return 0;
 }
