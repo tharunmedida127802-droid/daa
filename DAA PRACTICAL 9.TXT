@@ -1,39 +1,57 @@
+// Practical 9: Prim's Algorithm
+// Purpose: To find the Minimum Spanning Tree (MST) of a graph.
+
 #include <iostream>
 #include <climits>
 using namespace std;
 
 int main()
 {
+    // Declare the number of vertices
     int n;
 
+    // Input the number of vertices
     cout << "Enter number of vertices: ";
     cin >> n;
 
+    // Declare the adjacency matrix
     int graph[10][10];
 
+    // Input the adjacency matrix
     cout << "Enter the adjacency matrix:\n";
 
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
         {
+            // Read the weight between vertices
             cin >> graph[i][j];
         }
     }
 
+    // Parent array stores the parent of each vertex
     int parent[10];
+
+    // Key array stores the minimum edge weight
     int key[10];
+
+    // Visited array keeps track of selected vertices
     bool visited[10];
 
     // Initialize
     for (int i = 0; i < n; i++)
     {
+        // Set initial key value to infinity
         key[i] = INT_MAX;
+
+        // Mark all vertices as unvisited
         visited[i] = false;
     }
 
     // Start from vertex 0
     key[0] = 0;
+
+    // Starting vertex has no parent
     parent[0] = -1;
 
     // Find MST
@@ -45,6 +63,7 @@ int main()
         // Find vertex with minimum key
         for (int i = 0; i < n; i++)
         {
+            // Select the unvisited vertex with minimum key
             if (!visited[i] && key[i] < min)
             {
                 min = key[i];
@@ -58,11 +77,15 @@ int main()
         // Update adjacent vertices
         for (int v = 0; v < n; v++)
         {
+            // Check for an edge and update the minimum weight
             if (graph[u][v] != 0 &&
                 !visited[v] &&
                 graph[u][v] < key[v])
             {
+                // Store the parent vertex
                 parent[v] = u;
+
+                // Update the minimum edge weight
                 key[v] = graph[u][v];
             }
         }
@@ -71,18 +94,29 @@ int main()
     // Print MST
     int totalCost = 0;
 
+    // Display the Minimum Spanning Tree
     cout << "\nMinimum Spanning Tree:\n";
     cout << "Edge\tWeight\n";
 
+    // Display all selected edges
     for (int i = 1; i < n; i++)
     {
         cout << parent[i] << " - " << i
              << "\t" << graph[i][parent[i]] << endl;
 
+        // Calculate the total cost of MST
         totalCost += graph[i][parent[i]];
     }
 
+    // Display the minimum total cost
     cout << "\nMinimum Cost = " << totalCost << endl;
 
     return 0;
 }
+
+// Prim's Algorithm starts from a selected vertex and grows the MST.
+// It always selects the minimum weight edge connecting a new vertex.
+// The final Minimum Spanning Tree contains n-1 edges.
+// Prim's Algorithm follows the Greedy approach.
+// Time Complexity: O(V^2)
+// Space Complexity: O(V^2)
