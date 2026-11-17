@@ -1,0 +1,64 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+int main()
+{
+    int n, amount;
+
+    cout << "Enter number of coins: ";
+    cin >> n;
+
+    vector<int> coins(n);
+
+    cout << "Enter coin values: ";
+    for (int i = 0; i < n; i++)
+    {
+        cin >> coins[i];
+    }
+
+    cout << "Enter amount: ";
+    cin >> amount;
+
+    // Create DP array to store minimum number of coins
+    vector<int> dp(amount + 1, INT_MAX);
+
+    // 0 coins are needed to make amount 0
+    dp[0] = 0;
+
+    // Calculate minimum coins for every amount
+    for (int i = 1; i <= amount; i++)
+    {
+        // Check every available coin
+        for (int j = 0; j < n; j++)
+        {
+            // Check if the coin can be used
+            if (coins[j] <= i && dp[i - coins[j]] != INT_MAX)
+            {
+                // Choose the minimum number of coins
+                dp[i] = min(dp[i], dp[i - coins[j]] + 1);
+            }
+        }
+    }
+
+    // Check whether the required amount can be formed
+    if (dp[amount] == INT_MAX)
+    {
+        cout << "Change cannot be made." << endl;
+    }
+    else
+    {
+        cout << "Minimum number of coins: "
+             << dp[amount] << endl;
+    }
+
+    return 0;
+}
+
+// Making Change Problem uses Dynamic Programming.
+// It finds the minimum number of coins required for a given amount.
+// The DP array stores the minimum coins needed for each amount.
+// The problem has overlapping subproblems and optimal substructure.
+// Time Complexity: O(n × amount)
+// Space Complexity: O(amount)
