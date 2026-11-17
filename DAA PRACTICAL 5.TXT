@@ -1,21 +1,33 @@
+// Practical 5: Knapsack Problem using Dynamic Programming
+// Purpose: To find the maximum value that can be obtained
+// within the given weight capacity.
+
 #include <iostream>
 #include <vector>
 using namespace std;
 
+// Function to return the maximum of two values
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
+// Function to solve the 0/1 Knapsack problem
 int knapsack(int W, vector<int> wt, vector<int> val, int n) {
 
+    // Create DP table and initialize all values with 0
     vector<vector<int>> dp(n + 1, vector<int>(W + 1, 0));
 
+    // Process each item one by one
     for (int i = 1; i <= n; i++) {
 
+        // Check all possible weight capacities
         for (int w = 1; w <= W; w++) {
 
+            // Check if the current item can fit
             if (wt[i - 1] <= w) {
 
+                // Choose the maximum value between
+                // including and excluding the current item
                 dp[i][w] = max(
                     val[i - 1] + dp[i - 1][w - wt[i - 1]],
                     dp[i - 1][w]
@@ -23,23 +35,42 @@ int knapsack(int W, vector<int> wt, vector<int> val, int n) {
             }
 
             else {
+                // If the item cannot fit, exclude it
                 dp[i][w] = dp[i - 1][w];
             }
         }
     }
 
+    // Return the maximum value for the given capacity
     return dp[n][W];
 }
 
 int main() {
 
+    // Store the values of the items
     vector<int> val = {60, 100, 120};
+
+    // Store the weights of the items
     vector<int> wt = {10, 20, 30};
+
+    // Set the maximum weight capacity
     int W = 50;
+
+    // Find the number of items
     int n = val.size();
+
+    // Calculate the maximum possible value
     int result = knapsack(W, wt, val, n);
 
+    // Display the maximum value
     cout << "Maximum value = " << result << endl;
+
     return 0;
 }
 
+// Knapsack Problem uses Dynamic Programming to find the optimal solution.
+// Each item can either be selected or not selected.
+// The DP table stores the best value for different capacities.
+// The objective is to maximize the total value within the given capacity.
+// Time Complexity: O(n × W)
+// Space Complexity: O(n × W)
