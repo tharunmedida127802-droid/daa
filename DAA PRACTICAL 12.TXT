@@ -1,9 +1,14 @@
+// Practical 12: Travelling Salesman Problem (TSP)
+// Purpose: To find the minimum cost of visiting all cities
+// and returning to the starting city.
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <climits>
 using namespace std;
 
+// Recursive function to find the minimum travelling cost
 int tsp(int mask, int pos, vector<vector<int>>& cost,
         vector<vector<int>>& dp, int n) {
 
@@ -11,31 +16,44 @@ int tsp(int mask, int pos, vector<vector<int>>& cost,
     if (mask == (1 << n) - 1)
         return cost[pos][0];
 
+    // Return the already calculated result
     if (dp[mask][pos] != -1)
         return dp[mask][pos];
 
+    // Initialize answer with maximum possible value
     int ans = INT_MAX;
 
     // Visit every unvisited city
     for (int city = 0; city < n; city++) {
+        // Check whether the city is not visited
         if ((mask & (1 << city)) == 0) {
+
+            // Calculate the cost of visiting the next city
             int newCost = cost[pos][city]
                         + tsp(mask | (1 << city), city,
                               cost, dp, n);
+
+            // Store the minimum travelling cost
             ans = min(ans, newCost);
         }
     }
 
+    // Store and return the minimum cost
     return dp[mask][pos] = ans;
 }
 
 int main() {
+    // Declare variable to store number of cities
     int n;
+
+    // Input the number of cities
     cout << "Enter number of cities: ";
     cin >> n;
 
+    // Create the cost matrix
     vector<vector<int>> cost(n, vector<int>(n));
 
+    // Input the travelling cost between cities
     cout << "Enter the cost matrix:\n";
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -43,11 +61,22 @@ int main() {
         }
     }
 
+    // Create DP table and initialize all values with -1
     vector<vector<int>> dp(1 << n, vector<int>(n, -1));
 
+    // Start from city 0 and find the minimum travelling cost
     int minCost = tsp(1, 0, cost, dp, n);
 
+    // Display the minimum travelling cost
     cout << "Minimum travelling cost: " << minCost << endl;
 
     return 0;
 }
+
+
+// TSP finds the minimum cost tour that visits every city exactly once.
+// The tour starts from the first city and finally returns to the same city.
+// Dynamic Programming is used to avoid repeated calculations.
+// A bitmask is used to keep track of visited cities.
+// Time Complexity: O(n^2 × 2^n)
+// Space Complexity: O(n × 2^n)
